@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Post, Body, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Delete, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 import { PlansService } from './plans.service';
+import { PlanDto } from '../../common/dtos/plan.dto';
 
 @Controller('api/plans')
 export class PlansController {
@@ -16,13 +17,15 @@ export class PlansController {
     }
 
     @Post('')
-    async createPlan(@Body() body){
-        return this.plansService.createPlan(body);
+    @UsePipes(new ValidationPipe())
+    async createPlan(@Body() planDto: PlanDto){
+        return this.plansService.createPlan(planDto);
     }
 
     @Put(':id')
-    async updatePlan(@Param() params, @Body() body){
-        return this.plansService.updatePlan(params.id, body);
+    @UsePipes(new ValidationPipe())
+    async updatePlan(@Param() params, @Body() planDto: PlanDto){
+        return this.plansService.updatePlan(params.id, planDto);
     }
 
     @Delete(':id')

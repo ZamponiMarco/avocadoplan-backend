@@ -1,4 +1,9 @@
+import { IsString } from "class-validator";
+
 export class PlanDto{
-    title: string;
-    description: string;
+    @IsString()
+    readonly title: string;
+
+    @IsString()
+    readonly description: string;
 }
