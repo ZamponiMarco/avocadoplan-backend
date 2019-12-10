@@ -6,7 +6,8 @@ import { PlanDto } from '../../common/dtos/plan.dto';
 
 @Injectable()
 export class PlansService {
-    constructor(@InjectModel('Plan') private readonly planModel: Model<Plan>){}
+
+    @InjectModel('Plan') private readonly planModel: Model<Plan>
 
     async getPlans(): Promise<Plan[]>{
         return await this.planModel.find().exec();
