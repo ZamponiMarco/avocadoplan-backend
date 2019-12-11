@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PlansController } from './plans.controller';
 import { PlansService } from './plans.service';
-import { Plan } from 'src/common/interfaces/plan.interface';
-import { PlanDto } from '../../common/dtos/plan.dto';
+import { Plan } from '../../common/interfaces/plan.interface';
+import { PlanDto } from '../../common/dtos/create-plan.dto';
 import { PlansModule } from './plans.module';
 import { MongooseModule } from '@nestjs/mongoose';
 

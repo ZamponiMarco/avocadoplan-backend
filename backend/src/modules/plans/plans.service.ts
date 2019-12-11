@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Plan } from '../../common/interfaces/plan.interface';
-import { PlanDto } from '../../common/dtos/plan.dto';
+import { PlanDto } from '../../common/dtos/create-plan.dto';
 
 @Injectable()
 export class PlansService {
