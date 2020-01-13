@@ -1,4 +1,5 @@
-import { IsEmail, IsHash } from "class-validator";
+import { IsEmail, IsHash, IsArray } from "class-validator";
+import { Type } from "class-transformer";
 
 export class UserDto{
     @IsEmail()
@@ -6,4 +7,8 @@ export class UserDto{
 
     @IsHash('md5')
     readonly password: string;
+
+    @Type(() => String)
+    @IsArray()
+    readonly roles: string[];
 }

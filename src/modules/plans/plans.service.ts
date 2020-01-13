@@ -9,23 +9,27 @@ export class PlansService {
 
     @InjectModel('Plan') private readonly planModel: Model<Plan>
 
-    async getPlans(): Promise<Plan[]>{
+    async getPlans(): Promise<Plan[]> {
         return await this.planModel.find().exec();
     }
 
-    async getPlanById(id: string): Promise<Plan>{
+    async getPlanById(id: string): Promise<Plan> {
         return await this.planModel.findById(id).exec();
     }
 
-    async createPlan(planDto: PlanDto): Promise<Plan>{
-        return await new this.planModel(planDto).save();
+    async getPlansByOwner(ownerId: string): Promise<Plan[]> {
+        return await this.planModel.find({owner: ownerId}).exec();
     }
 
-    async updatePlan(id: string, planDto: PlanDto): Promise<Plan>{
-        return await this.planModel.update({_id: id}, planDto).exec();
+    async createPlan(planDto: PlanDto): Promise<Plan> {
+        return await this.planModel(planDto).save();
     }
 
-    async deletePlan(id: string): Promise<Plan>{
-        return await this.planModel.deleteOne({_id: id}).exec();
+    async updatePlan(id: string, planDto: PlanDto): Promise<Plan> {
+        return await this.planModel.update({ _id: id }, planDto).exec();
+    }
+
+    async deletePlan(id: string): Promise<Plan> {
+        return await this.planModel.deleteOne({ _id: id }).exec();
     }
 }

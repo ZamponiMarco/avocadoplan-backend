@@ -19,6 +19,11 @@ export class PlansController {
         return this.plansService.getPlanById(params.id);
     }
 
+    @Get('user/:id')
+    async getPlansByOwner(@Param() params) {
+        return this.plansService.getPlansByOwner(params.id);
+    }
+
     @Post('')
     @UsePipes(new ValidationPipe())
     async createPlan(@Body() planDto: PlanDto) {

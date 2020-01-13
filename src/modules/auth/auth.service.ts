@@ -1,23 +1,31 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
-import { User } from '../../common/interfaces/user.interface';
 import { UsersService } from '../users/users.service';
-import { CredentialsDto } from '../../common/dtos/create-credential.dto';
+import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/common/interfaces/user.interface';
 
 @Injectable()
 export class AuthService {
 
     constructor(
-        private readonly usersService: UsersService
+        private readonly usersService: UsersService,
+        private readonly jwtService: JwtService
     ){}
 
-    async loginWithCredentials(credentialsDto: CredentialsDto): Promise<User>{
-        let user = await this.usersService.getUserByEmail(credentialsDto.email);
+    async login(user: User){
+        return {
+            access_token: this.jwtService.sign({
+                email: user.email,
+                id: user._id,
+            })
+        };
+    }
 
-        if (!user || user.password != credentialsDto.password) {
-            throw new ForbiddenException();
+    async validateUser(email: string, password: string) {
+        const user = await this.usersService.getUserByEmail(email);
+        if (user && user.password == password) {
+            return user;
         }
-
-        return user;
+        return null;
     }
 
 }
