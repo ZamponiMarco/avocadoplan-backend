@@ -26,7 +26,7 @@ export class PlansService {
     }
 
     async updatePlan(id: string, planDto: PlanDto): Promise<Plan> {
-        return await this.planModel.update({ _id: id }, planDto).exec();
+        return await this.planModel.updateOne({ _id: id }, planDto).exec();
     }
 
     async deletePlan(id: string): Promise<Plan> {
