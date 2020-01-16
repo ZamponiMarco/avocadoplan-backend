@@ -5,11 +5,7 @@ export const PlanSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     drinkDescription: { type: String, required: true },
-    owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
+    owner: { type: String, required: true},
     upvotes: { type: Number, required: true, default: 0 },
     downvotes: { type: Number, required: true, default: 0 },
     tags: [{ type: String, lowercase: true, trim: true, required: false }],

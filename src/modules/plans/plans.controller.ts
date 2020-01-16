@@ -2,7 +2,7 @@ import { Controller, Get, Param, Post, Body, Delete, Put, UsePipes, ValidationPi
 import { PlansService } from './plans.service';
 import { PlanDto } from '../../common/dtos/create-plan.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { OwnerGuard } from '../auth/owner.guard';
+import { OwnerGuard } from '../auth/guards/owner.guard';
 
 @Controller('api/plans')
 export class PlansController {
@@ -11,6 +11,7 @@ export class PlansController {
         private readonly plansService: PlansService
     ) { }
 
+    @UseGuards(AuthGuard('jwt'))
     @Get('')
     async getPlans() {
         return this.plansService.getPlans();
@@ -26,7 +27,6 @@ export class PlansController {
         return this.plansService.getPlansByOwner(params.id);
     }
 
-    @UseGuards(AuthGuard('jwt'))
     @Post('')
     @UsePipes(new ValidationPipe())
     async createPlan(@Body() planDto: PlanDto) {

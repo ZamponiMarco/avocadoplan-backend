@@ -13,8 +13,8 @@ export class PlanDto{
     @IsString()
     readonly drinkDescription: string;
 
-    @IsMongoId()
-    readonly owner: mongoose.Types.ObjectId;
+    @IsString()
+    readonly owner: string;
 
     @IsArray()
     @IsString({each: true})

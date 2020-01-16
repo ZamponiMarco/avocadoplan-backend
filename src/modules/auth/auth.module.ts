@@ -1,29 +1,18 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-import { UsersModule } from '../users/users.module';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy } from './guards/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
-import { LocalStrategy } from './local.strategy';
-import { OwnerGuard } from './owner.guard';
 import { PlansModule } from '../plans/plans.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
-    UsersModule,
     PlansModule,
+    PassportModule,
     JwtModule.register({
       secret: "sas",
-      signOptions: {
-      }
     }),
   ],
-  controllers: [AuthController],
-  providers: [
-    AuthService,
-    JwtStrategy,
-    LocalStrategy,
-    OwnerGuard
-  ]
+  providers: [JwtStrategy],
+  exports: [JwtStrategy]
 })
 export class AuthModule {}
