@@ -6,7 +6,7 @@ import { OwnerGuard } from '../auth/guards/owner.guard';
 
 @Controller('api/plans')
 export class PlansController {
-    
+
     constructor(
         private readonly plansService: PlansService
     ) { }

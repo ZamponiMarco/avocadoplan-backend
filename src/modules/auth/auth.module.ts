@@ -9,7 +9,7 @@ import { PassportModule } from '@nestjs/passport';
     PlansModule,
     PassportModule,
     JwtModule.register({
-      secret: "sas",
+      secret: process.env.JWT_SECRET,
     }),
   ],
   providers: [JwtStrategy],

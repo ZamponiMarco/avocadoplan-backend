@@ -15,7 +15,6 @@ export class OwnerGuard implements CanActivate {
         const request = context.switchToHttp().getRequest();
         let isMod: boolean = request.user['permissions'].some(per => per === 'moderator');
         let userId: string = request.user['sub'];
-        console.log(request.user);
         let planId: string = request.params.id;
         let plan: Plan = await this.plansService.getPlanById(planId);
         return isMod || userId == plan.owner;

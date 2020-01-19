@@ -11,12 +11,12 @@ export class JwtStrategy extends PassportStrategy(Strategy){
               cache: true,
               rateLimit: true,
               jwksRequestsPerMinute: 5,
-              jwksUri: `https://zamponimarco.eu.auth0.com/.well-known/jwks.json`
+              jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`
             }),
       
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            audience: 'http://localhost:3000',
-            issuer: `https://zamponimarco.eu.auth0.com/`
+            audience: `http://${process.env.AUTH0_AUDIENCE}`,
+            issuer: `https://${process.env.AUTH0_DOMAIN}/`
           });
     }
     
