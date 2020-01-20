@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Delete, Put, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Delete, Put, UsePipes, ValidationPipe, UseGuards, Query } from '@nestjs/common';
 import { PlansService } from './plans.service';
 import { PlanDto } from '../../common/dtos/create-plan.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -11,10 +11,13 @@ export class PlansController {
         private readonly plansService: PlansService
     ) { }
 
-    @UseGuards(AuthGuard('jwt'))
     @Get('')
-    async getPlans() {
-        return this.plansService.getPlans();
+    async getPlans(@Body() body) {
+        return this.plansService.getPlans({
+            limit: +body.limit, 
+            skip: +body.skip,
+            sort: body.sort,
+        });
     }
 
     @Get(':id')
@@ -27,6 +30,7 @@ export class PlansController {
         return this.plansService.getPlansByOwner(params.id);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Post('')
     @UsePipes(new ValidationPipe())
     async createPlan(@Body() planDto: PlanDto) {
