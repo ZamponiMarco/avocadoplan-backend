@@ -1,28 +1,26 @@
-import { IsString, IsMongoId, IsArray, ValidateNested, IsObject } from "class-validator";
-import * as mongoose from 'mongoose';
-import { DayDto } from "./create-day.dto";
-import {Type } from "class-transformer";
+import { IsString, IsArray, ValidateNested } from 'class-validator';
+import { DayDto } from './create-day.dto';
+import { Type } from 'class-transformer';
 
-export class PlanDto{
-    @IsString()
-    readonly title: string;
+export class PlanDto {
+  @IsString()
+  readonly title: string;
 
-    @IsString()
-    readonly description: string;
+  @IsString()
+  readonly description: string;
 
-    @IsString()
-    readonly drinkDescription: string;
+  @IsString()
+  readonly drinkDescription: string;
 
-    @IsString()
-    readonly owner: string;
+  @IsString()
+  readonly owner: string;
 
-    @IsArray()
-    @IsString({each: true})
-    readonly tags: string[];
+  @IsArray()
+  @IsString({ each: true })
+  readonly tags: string[];
 
-    @ValidateNested()
-    @Type(() => DayDto)
-    @IsArray()
-    readonly days: DayDto[];
-
+  @ValidateNested()
+  @Type(() => DayDto)
+  @IsArray()
+  readonly days: DayDto[];
 }

@@ -12,7 +12,13 @@ describe('PlansController', () => {
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      imports: [PlansModule, MongooseModule.forRoot('mongodb://localhost/test', { useNewUrlParser: true, useUnifiedTopology: true })]
+      imports: [
+        PlansModule,
+        MongooseModule.forRoot('mongodb://localhost/test', {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        }),
+      ],
     }).compile();
 
     plansService = module.get<PlansService>(PlansService);
@@ -24,16 +30,15 @@ describe('PlansController', () => {
       let result: Plan[];
       jest.spyOn(plansService, 'getPlans').mockResolvedValue(result);
       expect(await plansController.getPlans()).toBe(result);
-    })
-  })
+    });
+  });
 
   describe('createPlan', () => {
     it('should return a plan object', async () => {
-      const dto = new PlanDto();  
+      const dto = new PlanDto();
       let result: Plan;
-      jest.spyOn(plansService, 'createPlan').mockResolvedValue(result)
+      jest.spyOn(plansService, 'createPlan').mockResolvedValue(result);
       expect(await plansController.createPlan(dto)).toBe(result);
-    })
-  })
-
+    });
+  });
 });

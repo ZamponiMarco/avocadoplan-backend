@@ -7,14 +7,12 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(
-      process.env.DB_URL, 
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true 
-      }
-    ),
+    MongooseModule.forRoot(process.env.DB_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }),
     PlansModule,
-    AuthModule],
+    AuthModule,
+  ],
 })
-export class AppModule { }
+export class AppModule {}

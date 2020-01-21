@@ -6,12 +6,15 @@ import { PlanSchema } from '../../common/schemas/plan.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{
-    name: 'Plan',
-    schema: PlanSchema
-  }])],
+    MongooseModule.forFeature([
+      {
+        name: 'Plan',
+        schema: PlanSchema,
+      },
+    ]),
+  ],
   controllers: [PlansController],
   providers: [PlansService],
-  exports: [PlansService]
+  exports: [PlansService],
 })
 export class PlansModule {}
