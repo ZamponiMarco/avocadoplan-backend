@@ -13,7 +13,7 @@ import {
 import { PlansService } from './plans.service';
 import { PlanDto } from '../../common/dtos/create-plan.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { OwnerGuard } from '../auth/guards/owner.guard';
+import { PlanGuard } from '../auth/guards/plan.guard';
 
 @Controller('api/plans')
 export class PlansController {
@@ -41,13 +41,13 @@ export class PlansController {
     return this.plansService.createPlan(planDto);
   }
 
-  @UseGuards(AuthGuard('jwt'), OwnerGuard)
+  @UseGuards(AuthGuard('jwt'), PlanGuard)
   @Put(':id')
   async updatePlanById(@Param() params, @Body() planDto: PlanDto) {
     return this.plansService.updatePlan(params.id, planDto);
   }
 
-  @UseGuards(AuthGuard('jwt'), OwnerGuard)
+  @UseGuards(AuthGuard('jwt'), PlanGuard)
   @Delete(':id')
   async deletePlanById(@Param() params) {
     return this.plansService.deletePlan(params.id);
