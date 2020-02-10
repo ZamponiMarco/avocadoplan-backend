@@ -23,11 +23,7 @@ export class PlanDto {
 
   @IsInt()
   @IsOptional()
-  readonly downvotes: number;
-
-  @IsInt()
-  @IsOptional()
-  readonly upvotes: number;
+  readonly votes: number;
 
   @IsArray()
   @IsString({ each: true })

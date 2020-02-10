@@ -7,8 +7,7 @@ export interface Plan extends mongoose.Document {
   readonly description: string;
   readonly drinkDescription: string;
   readonly owner: string;
-  readonly upvotes: number;
-  readonly downvotes: number;
+  readonly votes: number;
   readonly tags: string[];
   readonly days: Day[];
 }

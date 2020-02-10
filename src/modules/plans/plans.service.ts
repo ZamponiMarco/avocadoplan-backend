@@ -3,9 +3,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Plan } from '../../common/interfaces/plan.interface';
 import { PlanDto } from '../../common/dtos/create-plan.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class PlansService {
+  constructor(private readonly usersService: UsersService) {}
+
   @InjectModel('Plan') private readonly planModel: Model<Plan>;
 
   async getPlans(options: any): Promise<any[]> {
@@ -32,20 +35,30 @@ export class PlansService {
     return await this.planModel.deleteOne({ _id: id }).exec();
   }
 
-  async downvotePlanById(id: string) {
-    let downvotes = (await this.getPlanById(id)).downvotes;
-    downvotes++;
-    return await this.planModel
-      .updateOne({ _id: id }, { downvotes: downvotes })
-      .exec();
+  async downvotePlanById(planId: string, userId: string) {
+    let votes = await (await this.getPlanById(planId)).votes;
+    let playerVotes = (await this.usersService.getUserById(userId)).votes;
+    if (playerVotes.get(planId.toString()) != -1) {
+      votes = votes - playerVotes.get(planId.toString()) - 1;
+      playerVotes.set(planId, -1);
+      this.usersService.updateUser(userId, { _id: userId, votes: playerVotes });
+      await this.planModel.updateOne({ _id: planId }, { votes: votes }).exec();
+      return true;
+    }
+    return false;
   }
 
-  async upvotePlanById(id: string) {
-    let upvotes = (await this.getPlanById(id)).upvotes;
-    upvotes++;
-    return await this.planModel
-      .updateOne({ _id: id }, { upvotes: upvotes })
-      .exec();
+  async upvotePlanById(planId: string, userId: string) {
+    let votes = await (await this.getPlanById(planId)).votes;
+    let playerVotes = (await this.usersService.getUserById(userId)).votes;
+    if (playerVotes.get(planId.toString()) != 1) {
+      votes = votes - playerVotes.get(planId.toString()) + 1;
+      playerVotes.set(planId, +1);
+      this.usersService.updateUser(userId, { _id: userId, votes: playerVotes });
+      await this.planModel.updateOne({ _id: planId }, { votes: votes }).exec();
+      return true;
+    }
+    return false;
   }
 
   async getPlansWithFilter(filter: any, options: any) {

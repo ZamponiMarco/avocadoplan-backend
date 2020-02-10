@@ -1,10 +1,4 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsArray,
-  IsMongoId,
-  IsOptional,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class UserDto {
   @IsString()
@@ -12,12 +6,5 @@ export class UserDto {
   readonly _id: string;
 
   @IsOptional()
-  @IsArray()
-  @IsMongoId({ each: true })
-  readonly upvotes: string[];
-
-  @IsOptional()
-  @IsArray()
-  @IsMongoId({ each: true })
-  readonly downvotes: string[];
+  readonly votes: Map<string, number>;
 }

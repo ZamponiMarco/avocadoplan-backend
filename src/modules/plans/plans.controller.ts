@@ -61,18 +61,12 @@ export class PlansController {
   @UseGuards(AuthGuard('jwt'))
   @Put('/upvote/:id')
   async upvotePlanById(@Param() params, @Request() req) {
-    if (await this.usersService.upvotePlanById(req.user['sub'], params.id)) {
-      return this.plansService.upvotePlanById(params.id);
-    }
-    return false;
+    return this.plansService.upvotePlanById(params.id, req.user['sub']);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put('/downvote/:id')
   async downvotePlanById(@Param() params, @Request() req) {
-    return (
-      this.usersService.downvotePlanById(req.user['sub'], params.id) &&
-      this.plansService.downvotePlanById(params.id)
-    );
+    return this.plansService.downvotePlanById(params.id, req.user['sub']);
   }
 }
