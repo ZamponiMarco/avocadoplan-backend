@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Param,
+  Request,
   Post,
   Body,
   Delete,
@@ -14,10 +15,14 @@ import { PlansService } from './plans.service';
 import { PlanDto } from '../../common/dtos/create-plan.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { PlanGuard } from '../auth/guards/plan.guard';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('api/plans')
 export class PlansController {
-  constructor(private readonly plansService: PlansService) {}
+  constructor(
+    private readonly plansService: PlansService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Get('')
   async getPlans(@Body() body: any = {}) {
@@ -55,13 +60,19 @@ export class PlansController {
 
   @UseGuards(AuthGuard('jwt'))
   @Put('/upvote/:id')
-  async upvotePlanById(@Param() params) {
-    return this.plansService.upvotePlanById(params.id);
+  async upvotePlanById(@Param() params, @Request() req) {
+    if (await this.usersService.upvotePlanById(req.user['sub'], params.id)) {
+      return this.plansService.upvotePlanById(params.id);
+    }
+    return false;
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put('/downvote/:id')
-  async downvotePlanById(@Param() params) {
-    return this.plansService.downvotePlanById(params.id);
+  async downvotePlanById(@Param() params, @Request() req) {
+    return (
+      this.usersService.downvotePlanById(req.user['sub'], params.id) &&
+      this.plansService.downvotePlanById(params.id)
+    );
   }
 }

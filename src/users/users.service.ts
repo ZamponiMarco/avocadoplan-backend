@@ -19,4 +19,26 @@ export class UsersService {
   async createUser(userDto: UserDto) {
     return await this.userModel(userDto).save();
   }
+
+  async upvotePlanById(userId: string, planId: string) {
+    let upvotes = (await this.getUserById(userId)).upvotes;
+    if (!upvotes.some(upvote => upvote.toString() == planId.toString())) {
+      upvotes.push(planId);
+      return await this.userModel
+        .updateOne({ _id: userId }, { upvotes: upvotes })
+        .exec();
+    }
+    return false;
+  }
+
+  async downvotePlanById(userId: string, planId: string) {
+    let downvotes = (await this.getUserById(userId)).downvotes;
+    if (!downvotes.some(downvote => downvote.toString() == planId.toString())) {
+      downvotes.push(planId);
+      return await this.userModel
+        .updateOne({ _id: userId }, { downvotes: downvotes })
+        .exec();
+    }
+    return false;
+  }
 }

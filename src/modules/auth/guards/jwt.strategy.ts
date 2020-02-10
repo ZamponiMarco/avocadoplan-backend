@@ -29,7 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     let containsUser = await this.usersService.containsUserById(payload['sub']);
 
     if (!containsUser) {
-      this.usersService.createUser({
+      await this.usersService.createUser({
         _id: payload['sub'],
         upvotes: [],
         downvotes: [],
