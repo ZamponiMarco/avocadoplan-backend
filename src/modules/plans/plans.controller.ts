@@ -52,4 +52,16 @@ export class PlansController {
   async deletePlanById(@Param() params) {
     return this.plansService.deletePlan(params.id);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/upvote/:id')
+  async upvotePlanById(@Param() params) {
+    return this.plansService.upvotePlanById(params.id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/downvote/:id')
+  async downvotePlanById(@Param() params) {
+    return this.plansService.downvotePlanById(params.id);
+  }
 }

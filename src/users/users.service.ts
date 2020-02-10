@@ -12,6 +12,10 @@ export class UsersService {
     return await this.userModel.findById(id).exec();
   }
 
+  async containsUserById(id: string): Promise<Boolean> {
+    return await this.userModel.exists({ _id: id });
+  }
+
   async createUser(userDto: UserDto) {
     return await this.userModel(userDto).save();
   }

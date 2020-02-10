@@ -1,4 +1,10 @@
-import { IsString, IsArray, ValidateNested } from 'class-validator';
+import {
+  IsString,
+  IsArray,
+  ValidateNested,
+  IsInt,
+  IsOptional,
+} from 'class-validator';
 import { DayDto } from './create-day.dto';
 import { Type } from 'class-transformer';
 
@@ -14,6 +20,14 @@ export class PlanDto {
 
   @IsString()
   readonly owner: string;
+
+  @IsInt()
+  @IsOptional()
+  readonly downvotes: number;
+
+  @IsInt()
+  @IsOptional()
+  readonly upvotes: number;
 
   @IsArray()
   @IsString({ each: true })

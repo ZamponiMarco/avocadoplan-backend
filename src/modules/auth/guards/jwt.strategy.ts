@@ -2,10 +2,11 @@ import { passportJwtSecret } from 'jwks-rsa';
 import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(private readonly usersService: UsersService) {
     super({
       secretOrKeyProvider: passportJwtSecret({
         cache: true,
@@ -20,9 +21,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(payload: any, done: VerifiedCallback) {
+  async validate(payload: any, done: VerifiedCallback) {
     if (!payload) {
       done(new UnauthorizedException(), false);
+    }
+
+    let containsUser = await this.usersService.containsUserById(payload['sub']);
+
+    if (!containsUser) {
+      this.usersService.createUser({
+        _id: payload['sub'],
+        upvotes: [],
+        downvotes: [],
+      });
     }
 
     return done(null, payload);

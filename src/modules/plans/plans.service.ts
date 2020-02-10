@@ -32,6 +32,22 @@ export class PlansService {
     return await this.planModel.deleteOne({ _id: id }).exec();
   }
 
+  async downvotePlanById(id: string) {
+    let downvotes = (await this.getPlanById(id)).downvotes;
+    downvotes++;
+    return await this.planModel
+      .updateOne({ _id: id }, { downvotes: downvotes })
+      .exec();
+  }
+
+  async upvotePlanById(id: string) {
+    let upvotes = (await this.getPlanById(id)).upvotes;
+    upvotes++;
+    return await this.planModel
+      .updateOne({ _id: id }, { upvotes: upvotes })
+      .exec();
+  }
+
   async getPlansWithFilter(filter: any, options: any) {
     return await this.planModel
       .find(filter)
