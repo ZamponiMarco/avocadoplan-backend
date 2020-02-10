@@ -9,13 +9,7 @@ export class PlansService {
   @InjectModel('Plan') private readonly planModel: Model<Plan>;
 
   async getPlans(options: any): Promise<any[]> {
-    return await this.planModel
-      .find()
-      .select(options.reduced ? { days: false } : {})
-      .limit(options.limit ? +options.limit : 0)
-      .skip(options.skip ? +options.skip : 0)
-      .sort(options.sort ? options.sort : '$natural')
-      .exec();
+    return await this.getPlansWithFilter({}, options);
   }
 
   async getPlanById(id: string): Promise<Plan> {
@@ -23,13 +17,7 @@ export class PlansService {
   }
 
   async getPlansByOwner(ownerId: string, options: any): Promise<Plan[]> {
-    return await this.planModel
-      .find({ owner: ownerId })
-      .select(options.reduced ? { days: false } : {})
-      .limit(options.limit ? +options.limit : 0)
-      .skip(options.skip ? +options.skip : 0)
-      .sort(options.sort ? options.sort : '$natural')
-      .exec();
+    return await this.getPlansWithFilter({ owner: ownerId }, options);
   }
 
   async createPlan(planDto: PlanDto): Promise<Plan> {
@@ -42,5 +30,15 @@ export class PlansService {
 
   async deletePlan(id: string): Promise<Plan> {
     return await this.planModel.deleteOne({ _id: id }).exec();
+  }
+
+  async getPlansWithFilter(filter: any, options: any) {
+    return await this.planModel
+      .find(filter)
+      .select(options.reduced ? { days: false } : {})
+      .limit(options.limit ? +options.limit : 0)
+      .skip(options.skip ? +options.skip : 0)
+      .sort(options.sort ? options.sort : '$natural')
+      .exec();
   }
 }
