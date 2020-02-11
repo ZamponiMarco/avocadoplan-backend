@@ -24,6 +24,11 @@ export class PlansService {
     return await this.getPlansWithFilter({ owner: ownerId }, options);
   }
 
+  async getPlansSavedByUser(userId: string, options: any) {
+    let saved = (await this.usersService.getUserById(userId)).saved;
+    return await this.getPlansWithFilter({ _id: { $in: saved } }, options);
+  }
+
   async createPlan(planDto: PlanDto): Promise<Plan> {
     return await this.planModel(planDto).save();
   }
@@ -42,6 +47,17 @@ export class PlansService {
 
   async upvotePlanById(planId: string, userId: string) {
     return this.votePlanById(planId, userId, 1);
+  }
+
+  async savePlanById(planId: string, userId: string) {
+    let user = await this.usersService.getUserById(userId);
+    let saved = user.saved;
+    if (!saved.some(savedPlan => savedPlan.toString() == planId)) {
+      saved.push(planId);
+      this.usersService.updateUser(userId, user);
+      return true;
+    }
+    return false;
   }
 
   private async votePlanById(planId: string, userId: string, vote: number) {

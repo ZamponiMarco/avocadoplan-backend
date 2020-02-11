@@ -35,9 +35,16 @@ export class PlansController {
     return this.plansService.getPlanById(params.id);
   }
 
-  @Get('user/:id')
+  @Get('user/owner/:id')
   async getPlansByOwner(@Param() params, @Body() body: any = {}) {
     return this.plansService.getPlansByOwner(params.id, body);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('user/saved/')
+  async getPlansSavedByUser(@User() user, @Body() body: any = {}) {
+    console.log(user);
+    return this.plansService.getPlansSavedByUser(user.sub, body);
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -69,5 +76,11 @@ export class PlansController {
   @Put('/downvote/:id')
   async downvotePlanById(@Param() params, @User() user) {
     return this.plansService.downvotePlanById(params.id, user.sub);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/save/:id')
+  async savePlanById(@Param() params, @User() user) {
+    return this.plansService.savePlanById(params.id, user.sub);
   }
 }
