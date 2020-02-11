@@ -43,7 +43,6 @@ export class PlansController {
   @UseGuards(AuthGuard('jwt'))
   @Get('user/saved/')
   async getPlansSavedByUser(@User() user, @Body() body: any = {}) {
-    console.log(user);
     return this.plansService.getPlansSavedByUser(user.sub, body);
   }
 
