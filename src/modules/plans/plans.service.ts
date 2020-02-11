@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Plan } from '../../common/interfaces/plan.interface';
 import { PlanDto } from '../../common/dtos/create-plan.dto';
 import { UsersService } from 'src/users/users.service';
+import { UserDto } from 'src/common/dtos/create-user.dto';
 
 @Injectable()
 export class PlansService {
@@ -36,32 +37,33 @@ export class PlansService {
   }
 
   async downvotePlanById(planId: string, userId: string) {
-    let votes = await (await this.getPlanById(planId)).votes;
-    let playerVotes = (await this.usersService.getUserById(userId)).votes;
-    if (playerVotes.get(planId.toString()) != -1) {
-      votes = votes - playerVotes.get(planId.toString()) - 1;
-      playerVotes.set(planId, -1);
-      this.usersService.updateUser(userId, { _id: userId, votes: playerVotes });
-      await this.planModel.updateOne({ _id: planId }, { votes: votes }).exec();
-      return true;
-    }
-    return false;
+    return this.votePlanById(planId, userId, -1);
   }
 
   async upvotePlanById(planId: string, userId: string) {
-    let votes = await (await this.getPlanById(planId)).votes;
-    let playerVotes = (await this.usersService.getUserById(userId)).votes;
-    if (playerVotes.get(planId.toString()) != 1) {
-      votes = votes - playerVotes.get(planId.toString()) + 1;
-      playerVotes.set(planId, +1);
-      this.usersService.updateUser(userId, { _id: userId, votes: playerVotes });
-      await this.planModel.updateOne({ _id: planId }, { votes: votes }).exec();
+    return this.votePlanById(planId, userId, 1);
+  }
+
+  private async votePlanById(planId: string, userId: string, vote: number) {
+    let plan = await this.getPlanById(planId);
+    let user = await this.usersService.getUserById(userId);
+    let planVotes = plan.votes;
+    let userVotes = user.votes.get(planId.toString())
+      ? user.votes.get(planId.toString())
+      : 0;
+    if (userVotes != vote) {
+      planVotes = planVotes - userVotes + vote;
+      user.votes.set(planId, vote);
+      this.usersService.updateUser(userId, user);
+      await this.planModel
+        .updateOne({ _id: planId }, { votes: planVotes })
+        .exec();
       return true;
     }
     return false;
   }
 
-  async getPlansWithFilter(filter: any, options: any) {
+  private async getPlansWithFilter(filter: any, options: any) {
     return await this.planModel
       .find(filter)
       .select(options.reduced ? { days: false } : {})

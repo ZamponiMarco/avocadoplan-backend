@@ -21,7 +21,11 @@ export class UsersController {
 
   @UsePipes(new ValidationPipe())
   @Post('')
-  async createUser(@Body() userDto: UserDto) {
-    return this.usersService.createUser(userDto);
+  async createUser(userId: string) {
+    return this.usersService.createUser({
+      _id: userId,
+      votes: undefined,
+      saved: undefined,
+    });
   }
 }

@@ -32,6 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       await this.usersService.createUser({
         _id: payload['sub'],
         votes: new Map<string, number>(),
+        saved: [],
       });
     }
 

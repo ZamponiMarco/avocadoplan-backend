@@ -16,6 +16,7 @@ import { PlanDto } from '../../common/dtos/create-plan.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { PlanGuard } from '../auth/guards/plan.guard';
 import { UsersService } from 'src/users/users.service';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('api/plans')
 export class PlansController {
@@ -60,13 +61,13 @@ export class PlansController {
 
   @UseGuards(AuthGuard('jwt'))
   @Put('/upvote/:id')
-  async upvotePlanById(@Param() params, @Request() req) {
-    return this.plansService.upvotePlanById(params.id, req.user['sub']);
+  async upvotePlanById(@Param() params, @User() user) {
+    return this.plansService.upvotePlanById(params.id, user.sub);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put('/downvote/:id')
-  async downvotePlanById(@Param() params, @Request() req) {
-    return this.plansService.downvotePlanById(params.id, req.user['sub']);
+  async downvotePlanById(@Param() params, @User() user) {
+    return this.plansService.downvotePlanById(params.id, user.sub);
   }
 }

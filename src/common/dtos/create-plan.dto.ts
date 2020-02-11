@@ -13,8 +13,10 @@ export class PlanDto {
   readonly title: string;
 
   @IsString()
+  @IsOptional()
   readonly description: string;
 
+  @IsOptional()
   @IsString()
   readonly drinkDescription: string;
 

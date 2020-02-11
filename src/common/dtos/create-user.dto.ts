@@ -7,4 +7,7 @@ export class UserDto {
 
   @IsOptional()
   readonly votes: Map<string, number>;
+
+  @IsOptional()
+  readonly saved: string[];
 }
