@@ -50,22 +50,7 @@ export class PlansService {
   }
 
   async unvotePlanById(planId: string, userId: string) {
-    let plan = await this.getPlanById(planId);
-    let user = await this.usersService.getUserById(userId);
-    let planVotes = plan.votes;
-    let userVotes = user.votes.get(planId.toString())
-      ? user.votes.get(planId.toString())
-      : 0;
-    if (userVotes != 0) {
-      user.votes.delete(planId.toString());
-      this.usersService.updateUser(userId, user);
-      planVotes = planVotes - userVotes;
-      await this.planModel
-        .updateOne({ _id: planId }, { votes: planVotes })
-        .exec();
-      return true;
-    }
-    return false;
+    return this.votePlanById(planId, userId, 0);
   }
 
   async savePlanById(planId: string, userId: string) {
@@ -82,13 +67,16 @@ export class PlansService {
   private async votePlanById(planId: string, userId: string, vote: number) {
     let plan = await this.getPlanById(planId);
     let user = await this.usersService.getUserById(userId);
+    if (!plan) {
+      return false;
+    }
     let planVotes = plan.votes;
     let userVotes = user.votes.get(planId.toString())
       ? user.votes.get(planId.toString())
       : 0;
     if (userVotes != vote) {
       planVotes = planVotes - userVotes + vote;
-      user.votes.set(planId, vote);
+      vote == 0 ? user.votes.delete(planId) : user.votes.set(planId, vote);
       this.usersService.updateUser(userId, user);
       await this.planModel
         .updateOne({ _id: planId }, { votes: planVotes })

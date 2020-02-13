@@ -27,13 +27,13 @@ export class PlansController {
   }
 
   @Get(':id')
-  async getPlanById(@Param() params) {
-    return this.plansService.getPlanById(params.id);
+  async getPlanById(@Param('id') id) {
+    return this.plansService.getPlanById(id);
   }
 
   @Get('user/owner/:id')
-  async getPlansByOwner(@Param() params, @Body() body: any = {}) {
-    return this.plansService.getPlansByOwner(params.id, body);
+  async getPlansByOwner(@Param('id') id, @Body() body: any = {}) {
+    return this.plansService.getPlansByOwner(id, body);
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -51,37 +51,37 @@ export class PlansController {
 
   @UseGuards(AuthGuard('jwt'), PlanGuard)
   @Put(':id')
-  async updatePlanById(@Param() params, @Body() planDto: PlanDto) {
-    return this.plansService.updatePlan(params.id, planDto);
+  async updatePlanById(@Param('id') id, @Body() planDto: PlanDto) {
+    return this.plansService.updatePlan(id, planDto);
   }
 
   @UseGuards(AuthGuard('jwt'), PlanGuard)
   @Delete(':id')
-  async deletePlanById(@Param() params) {
-    return this.plansService.deletePlan(params.id);
+  async deletePlanById(@Param('id') id) {
+    return this.plansService.deletePlan(id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put('/upvote/:id')
-  async upvotePlanById(@Param() params, @User() user) {
-    return this.plansService.upvotePlanById(params.id, user.sub);
+  async upvotePlanById(@Param('id') id, @User() user) {
+    return this.plansService.upvotePlanById(id, user.sub);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put('/downvote/:id')
-  async downvotePlanById(@Param() params, @User() user) {
-    return this.plansService.downvotePlanById(params.id, user.sub);
+  async downvotePlanById(@Param('id') id, @User() user) {
+    return this.plansService.downvotePlanById(id, user.sub);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put('/unvote/:id')
-  async unvotePlanById(@Param() params, @User() user) {
-    return this.plansService.unvotePlanById(params.id, user.sub);
+  async unvotePlanById(@Param('id') id, @User() user) {
+    return this.plansService.unvotePlanById(id, user.sub);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put('/save/:id')
-  async savePlanById(@Param() params, @User() user) {
-    return this.plansService.savePlanById(params.id, user.sub);
+  async savePlanById(@Param('id') id, @User() user) {
+    return this.plansService.savePlanById(id, user.sub);
   }
 }
