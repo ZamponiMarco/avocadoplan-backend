@@ -15,15 +15,11 @@ import { PlansService } from './plans.service';
 import { PlanDto } from '../../common/dtos/create-plan.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { PlanGuard } from '../auth/guards/plan.guard';
-import { UsersService } from 'src/users/users.service';
 import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('api/plans')
 export class PlansController {
-  constructor(
-    private readonly plansService: PlansService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly plansService: PlansService) {}
 
   @Get('')
   async getPlans(@Body() body: any = {}) {
@@ -75,6 +71,12 @@ export class PlansController {
   @Put('/downvote/:id')
   async downvotePlanById(@Param() params, @User() user) {
     return this.plansService.downvotePlanById(params.id, user.sub);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/unvote/:id')
+  async unvotePlanById(@Param() params, @User() user) {
+    return this.plansService.unvotePlanById(params.id, user.sub);
   }
 
   @UseGuards(AuthGuard('jwt'))

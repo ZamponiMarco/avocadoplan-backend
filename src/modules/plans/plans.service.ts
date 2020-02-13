@@ -49,6 +49,25 @@ export class PlansService {
     return this.votePlanById(planId, userId, 1);
   }
 
+  async unvotePlanById(planId: string, userId: string) {
+    let plan = await this.getPlanById(planId);
+    let user = await this.usersService.getUserById(userId);
+    let planVotes = plan.votes;
+    let userVotes = user.votes.get(planId.toString())
+      ? user.votes.get(planId.toString())
+      : 0;
+    if (userVotes != 0) {
+      user.votes.delete(planId.toString());
+      this.usersService.updateUser(userId, user);
+      planVotes = planVotes - userVotes;
+      await this.planModel
+        .updateOne({ _id: planId }, { votes: planVotes })
+        .exec();
+      return true;
+    }
+    return false;
+  }
+
   async savePlanById(planId: string, userId: string) {
     let user = await this.usersService.getUserById(userId);
     let saved = user.saved;
