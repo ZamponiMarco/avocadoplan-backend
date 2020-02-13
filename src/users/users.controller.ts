@@ -3,7 +3,6 @@ import {
   Get,
   Param,
   Post,
-  Body,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';

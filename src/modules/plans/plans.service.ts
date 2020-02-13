@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { Plan } from '../../common/interfaces/plan.interface';
 import { PlanDto } from '../../common/dtos/create-plan.dto';
 import { UsersService } from 'src/users/users.service';
-import { UserDto } from 'src/common/dtos/create-user.dto';
 
 @Injectable()
 export class PlansService {
