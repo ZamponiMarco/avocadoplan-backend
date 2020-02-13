@@ -16,6 +16,7 @@ import { PlanDto } from '../../common/dtos/create-plan.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { PlanGuard } from '../auth/guards/plan.guard';
 import { User } from 'src/common/decorators/user.decorator';
+import { ParseObjectIdPipe } from 'src/common/pipes/parse-object-id.pipe';
 
 @Controller('api/plans')
 export class PlansController {
@@ -27,12 +28,15 @@ export class PlansController {
   }
 
   @Get(':id')
-  async getPlanById(@Param('id') id) {
+  async getPlanById(@Param('id', new ParseObjectIdPipe()) id) {
     return this.plansService.getPlanById(id);
   }
 
   @Get('user/owner/:id')
-  async getPlansByOwner(@Param('id') id, @Body() body: any = {}) {
+  async getPlansByOwner(
+    @Param('id', new ParseObjectIdPipe()) id,
+    @Body() body: any = {},
+  ) {
     return this.plansService.getPlansByOwner(id, body);
   }
 
@@ -51,37 +55,43 @@ export class PlansController {
 
   @UseGuards(AuthGuard('jwt'), PlanGuard)
   @Put(':id')
-  async updatePlanById(@Param('id') id, @Body() planDto: PlanDto) {
+  async updatePlanById(
+    @Param('id', new ParseObjectIdPipe()) id,
+    @Body() planDto: PlanDto,
+  ) {
     return this.plansService.updatePlan(id, planDto);
   }
 
   @UseGuards(AuthGuard('jwt'), PlanGuard)
   @Delete(':id')
-  async deletePlanById(@Param('id') id) {
+  async deletePlanById(@Param('id', new ParseObjectIdPipe()) id) {
     return this.plansService.deletePlan(id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put('/upvote/:id')
-  async upvotePlanById(@Param('id') id, @User() user) {
+  async upvotePlanById(@Param('id', new ParseObjectIdPipe()) id, @User() user) {
     return this.plansService.upvotePlanById(id, user.sub);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put('/downvote/:id')
-  async downvotePlanById(@Param('id') id, @User() user) {
+  async downvotePlanById(
+    @Param('id', new ParseObjectIdPipe()) id,
+    @User() user,
+  ) {
     return this.plansService.downvotePlanById(id, user.sub);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put('/unvote/:id')
-  async unvotePlanById(@Param('id') id, @User() user) {
+  async unvotePlanById(@Param('id', new ParseObjectIdPipe()) id, @User() user) {
     return this.plansService.unvotePlanById(id, user.sub);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put('/save/:id')
-  async savePlanById(@Param('id') id, @User() user) {
+  async savePlanById(@Param('id', new ParseObjectIdPipe()) id, @User() user) {
     return this.plansService.savePlanById(id, user.sub);
   }
 }
