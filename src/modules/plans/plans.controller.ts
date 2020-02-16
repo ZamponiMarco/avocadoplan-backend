@@ -9,6 +9,8 @@ import {
   UsePipes,
   ValidationPipe,
   UseGuards,
+  Response,
+  Header,
 } from '@nestjs/common';
 import { PlansService } from './plans.service';
 import { PlanDto } from '../../common/dtos/create-plan.dto';
@@ -98,5 +100,14 @@ export class PlansController {
   @Put('/unsave/:id')
   async unsavePlanById(@Param('id', new ParseObjectIdPipe()) id, @User() user) {
     return this.plansService.unsavePlanById(id, user.sub);
+  }
+
+  @Header('Content-Type', 'application/pdf')
+  @Get('/export/:id')
+  async exportPlanToPdf(
+    @Param('id', new ParseObjectIdPipe()) id,
+    @Response() res,
+  ) {
+    return this.plansService.exportPlanToPdf(id, res);
   }
 }

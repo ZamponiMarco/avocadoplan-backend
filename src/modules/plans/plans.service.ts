@@ -4,6 +4,8 @@ import { Model } from 'mongoose';
 import { Plan } from '../../common/interfaces/plan.interface';
 import { PlanDto } from '../../common/dtos/create-plan.dto';
 import { UsersService } from 'src/users/users.service';
+import * as PDFDocument from 'pdfkit';
+import * as fs from 'fs';
 
 @Injectable()
 export class PlansService {
@@ -50,6 +52,24 @@ export class PlansService {
 
   async unvotePlanById(planId: string, userId: string) {
     return this.votePlanById(planId, userId, 0);
+  }
+
+  async exportPlanToPdf(id: string, response) {
+    let plan: Plan = await this.getPlanById(id);
+    let doc = new PDFDocument();
+    let fileName = 'filename.pdf';
+    let dir = __dirname;
+    var writeStream = fs.createWriteStream(dir + '/' + fileName);
+    doc.pipe(writeStream);
+    doc.fontSize(18).text(plan.title);
+    doc.fontSize(14).text(plan.description);
+    doc.end();
+    writeStream.on('finish', () => {
+      response.sendFile(dir + '/' + fileName);
+    });
+    response.on('finish', () => {
+      fs.unlink(dir + '/' + fileName, () => {});
+    });
   }
 
   async savePlanById(planId: string, userId: string) {
