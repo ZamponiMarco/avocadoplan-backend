@@ -1,10 +1,10 @@
-import { IsNumber, ValidateNested, IsArray, Max } from 'class-validator';
+import { IsNumber, IsString, ValidateNested, IsArray, Max } from 'class-validator';
 import { MealDto } from './create-meal.dto';
 import { Type } from 'class-transformer';
 
 export class DayDto {
-  @IsNumber()
-  readonly weekDay: number;
+  @IsString()
+  readonly weekDay: string;
 
   @IsNumber()
   readonly week: number;
