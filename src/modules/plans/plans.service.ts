@@ -56,19 +56,14 @@ export class PlansService {
 
   async exportPlanToPdf(id: string, response) {
     let plan: Plan = await this.getPlanById(id);
-    let doc = new PDFDocument();
-    let fileName = 'filename.pdf';
-    let dir = __dirname;
-    var writeStream = fs.createWriteStream(dir + '/' + fileName);
-    doc.pipe(writeStream);
-    doc.fontSize(18).text(plan.title);
-    doc.fontSize(14).text(plan.description);
-    doc.end();
+    let path = __dirname + '/plan.pdf';
+    var writeStream = fs.createWriteStream(path);
+    this.writePdfFromPlan(writeStream, plan);
     writeStream.on('finish', () => {
-      response.sendFile(dir + '/' + fileName);
+      response.sendFile(path);
     });
     response.on('finish', () => {
-      fs.unlink(dir + '/' + fileName, () => {});
+      fs.unlink(path, () => {});
     });
   }
 
@@ -124,5 +119,13 @@ export class PlansService {
       .skip(options.skip ? +options.skip : 0)
       .sort(options.sort ? options.sort : '$natural')
       .exec();
+  }
+
+  private async writePdfFromPlan(writeStream, plan: Plan) {
+    let doc = new PDFDocument();
+    doc.pipe(writeStream);
+    doc.fontSize(18).text(plan.title);
+    doc.fontSize(14).text(plan.description);
+    doc.end();
   }
 }
