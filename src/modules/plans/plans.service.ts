@@ -63,6 +63,17 @@ export class PlansService {
     return false;
   }
 
+  async unsavePlanById(planId: string, userId: string) {
+    let user = await this.usersService.getUserById(userId);
+    let saved = user.saved;
+    if (saved.some(savedPlan => savedPlan.toString() == planId)) {
+      saved.splice(saved.indexOf(planId), 1);
+      this.usersService.updateUser(userId, user);
+      return true;
+    }
+    return false;
+  }
+
   private async votePlanById(planId: string, userId: string, vote: number) {
     let plan = await this.getPlanById(planId);
     let user = await this.usersService.getUserById(userId);

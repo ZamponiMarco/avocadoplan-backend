@@ -93,4 +93,10 @@ export class PlansController {
   async savePlanById(@Param('id', new ParseObjectIdPipe()) id, @User() user) {
     return this.plansService.savePlanById(id, user.sub);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/unsave/:id')
+  async unsavePlanById(@Param('id', new ParseObjectIdPipe()) id, @User() user) {
+    return this.plansService.unsavePlanById(id, user.sub);
+  }
 }
