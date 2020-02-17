@@ -34,10 +34,7 @@ export class PlansController {
   }
 
   @Get('user/owner/:id')
-  async getPlansByOwner(
-    @Param('id', new ParseObjectIdPipe()) id,
-    @Body() body: any = {},
-  ) {
+  async getPlansByOwner(@Param('id') id, @Body() body: any = {}) {
     return this.plansService.getPlansByOwner(id, body);
   }
 
